@@ -2,7 +2,7 @@ package peaksoft.service;
 
 import peaksoft.dto.response.TaskResponse;
 import peaksoft.dto.response.simple.SimpleResponse;
-import peaksoft.entity.Task;
+import peaksoft.entyti.Task;
 
 import java.util.List;
 

@@ -1,2 +1,7 @@
-package peaksoft.enums;public enum StudyFormat {
+package peaksoft.enums;
+
+public enum StudyFormat {
+    ONLiNE,
+    OFFLINE
+
 }

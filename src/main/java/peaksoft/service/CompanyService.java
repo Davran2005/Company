@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface CompanyService {
 
-    CompanyResponse saveCompany(CompanyRequest companyRequest);
+    SimpleResponse saveCompany(CompanyRequest companyRequest);
     List<CompanyResponse>getAllCompanies();
 
     CompanyResponse getCompanyById(Long companyId);
 
-    CompanyResponse updateCompany(Long companyId, CompanyRequest companyRequest);
+    SimpleResponse updateCompany(Long companyId, CompanyRequest companyRequest);
 
     SimpleResponse deleteCompanyById(Long companyId);
 

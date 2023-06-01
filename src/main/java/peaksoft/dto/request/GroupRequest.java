@@ -9,5 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GroupRequest {
     private String groupName;
+    private String imageLink;
     private String description;
 }
