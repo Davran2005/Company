@@ -26,7 +26,7 @@ public class Company {
     private String phoneNumber;
     @OneToMany(mappedBy = "company",cascade = {DETACH,MERGE,REFRESH})
     private List<Course>courses;
-    @ManyToMany(cascade = {DETACH,MERGE,REFRESH})
+    @ManyToMany(cascade = {DETACH,MERGE,REFRESH,PERSIST})
     private List<Instructor>instructors;
 
     public Company(String name, String country, String address, String phoneNumber) {

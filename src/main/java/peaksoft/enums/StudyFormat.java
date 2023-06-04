@@ -1,7 +1,7 @@
 package peaksoft.enums;
 
 public enum StudyFormat {
-    ONLiNE,
+    ONLINE,
     OFFLINE
 
 }

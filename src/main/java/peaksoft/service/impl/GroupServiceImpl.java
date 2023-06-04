@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.request.GroupRequest;
 import peaksoft.dto.response.GroupResponse;
+import peaksoft.dto.response.StudentCounterResponse;
 import peaksoft.dto.response.simple.SimpleResponse;
 import peaksoft.entyti.Company;
 import peaksoft.entyti.Course;
@@ -13,6 +14,7 @@ import peaksoft.repository.GroupRep;
 import peaksoft.service.GroupService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,52 +22,67 @@ import java.util.List;
 public class GroupServiceImpl implements GroupService {
     private final GroupRep groupRep;
     private final CourseRep courseRep;
-    Course course = new Course();
-//        course.setCourseName(courseRequest.getCourseName());
-//        course.setDateOfStar(LocalDate.now());
-//        course.setDescription(courseRequest.getDescription());
-//        company.getCourses().add(course);
-//        course.setCompany(company);
-//        courseRep.save(course);
-//        return SimpleResponse
-//                .builder()
-//                .status("OK")
-//                .message("Save Course")
-//                .build();
 
     @Override
-    public SimpleResponse saveGroup(Long courseId, GroupRequest groupRequest) {
+    public GroupResponse saveGroup(Long courseId, GroupRequest groupRequest) {
         Course course = courseRep.findById(courseId).orElseThrow(() -> new NullPointerException("Course with id: " + courseId + "not found"));
         Group group = new Group();
         group.setGroupName(groupRequest.getGroupName());
         group.setImageLink(groupRequest.getImageLink());
         group.setDescription(groupRequest.getDescription());
-        group.getCourses().add(course);
+        course.getGroups().add(group);
         groupRep.save(group);
-        return SimpleResponse
-                .builder()
-                .status("OK")
-                .message("Save Course")
-                .build();
+        return new GroupResponse(
+                group.getId(),
+                group.getGroupName(),
+                group.getImageLink(),
+                group.getDescription());
     }
 
     @Override
     public List<GroupResponse> getAllGroups() {
-        return null;
+        return groupRep.getAllGroup();
     }
 
     @Override
     public GroupResponse getGroupById(Long groupId) {
-        return null;
+        return groupRep.getGroupById(groupId).orElseThrow(() -> new NullPointerException("Group with id: " + groupId + "not found"));
     }
 
     @Override
-    public SimpleResponse updateGroup(Long groupId, GroupRequest groupRequest) {
-        return null;
+    public GroupResponse updateGroup(Long groupId, GroupRequest groupRequest) {
+        Group group = groupRep.findById(groupId).orElseThrow(() -> new NullPointerException("Group with id: " + groupId + "not found"));
+        group.setGroupName(groupRequest.getGroupName());
+        group.setImageLink(groupRequest.getImageLink());
+        group.setDescription(groupRequest.getDescription());
+        groupRep.save(group);
+        return new GroupResponse(
+                group.getId(),
+                group.getGroupName(),
+                group.getImageLink(),
+                group.getDescription());
+
     }
+
 
     @Override
     public SimpleResponse deleteGroup(Long groupId) {
-        return null;
+        Group group = groupRep.findById(groupId).orElseThrow(() -> new NullPointerException("Group with id: " + groupId + "not found"));
+        List<Course> courses = group.getCourses();
+        for (Course cours : courses) {
+            cours.getGroups().remove(group);
+        }
+        group.getCourses().clear();
+        groupRep.delete(group);
+        return SimpleResponse.builder()
+                .status("OK").message("Update Course").build();
     }
+
+    @Override
+    public StudentCounterResponse get(Long id) {
+        return StudentCounterResponse.builder()
+                .studentCount(groupRep.get(id))
+                .build();
+    }
+
 }

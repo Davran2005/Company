@@ -22,7 +22,9 @@ public class Student {
     private String lastName;
     private String phoneNumber;
     private String email;
+    @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
+    private Boolean isBlocked;
     @ManyToOne(cascade = {DETACH,REFRESH,MERGE,REMOVE})
     private Group group;
 

@@ -9,4 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LessonRequest {
     private String lessonName;
+    private String lessonTime;
 }

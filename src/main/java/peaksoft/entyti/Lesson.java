@@ -22,12 +22,16 @@ public class Lesson {
     @SequenceGenerator(name = "lesson_gen",sequenceName = "lesson_seq",allocationSize = 1)
     private Long id;
     private String lessonName;
+    private String lessonTime;
+
     @OneToMany(mappedBy = "lesson",cascade = {DETACH,REFRESH,MERGE,REMOVE})
     private List<Course>courses;
-    @OneToMany(mappedBy = "lesson",cascade = {DETACH,MERGE,REFRESH})
+    @OneToMany(mappedBy = "lesson",cascade = {ALL})
     private List<Task>tasks;
 
-    public Lesson(String lessonName) {
+    public Lesson(String lessonName,String lessonTime) {
         this.lessonName = lessonName;
+        this.lessonTime = lessonTime;
+
     }
 }

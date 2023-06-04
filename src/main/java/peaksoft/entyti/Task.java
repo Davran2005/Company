@@ -20,6 +20,6 @@ private Long id;
 private String taskName;
 private String taskText;
 private LocalDate deadLine;
-@ManyToOne(cascade = {DETACH,MERGE,REFRESH,REMOVE})
+@ManyToOne(cascade = {DETACH,MERGE,REFRESH})
 private Lesson lesson;
 }

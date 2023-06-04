@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-
+@Builder
 
 public class CompanyResponse {
     private Long id;

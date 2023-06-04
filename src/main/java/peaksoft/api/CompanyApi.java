@@ -3,6 +3,7 @@ package peaksoft.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.CompanyRequest;
+import peaksoft.dto.response.CompanyInfoResponse;
 import peaksoft.dto.response.CompanyResponse;
 import peaksoft.dto.response.simple.SimpleResponse;
 import peaksoft.service.CompanyService;
@@ -25,7 +26,7 @@ public class CompanyApi {
     }
 
     @PostMapping
-    public SimpleResponse saveCompany(@RequestBody CompanyRequest companyRequest) {
+    public CompanyResponse saveCompany(@RequestBody CompanyRequest companyRequest) {
         return companyService.saveCompany(companyRequest);
     }
 
@@ -35,13 +36,17 @@ public class CompanyApi {
     }
 
     @PutMapping("/{companyId}")
-    public SimpleResponse updateCompany(@PathVariable Long companyId, @RequestBody CompanyRequest companyRequest) {
+    public CompanyResponse updateCompany(@PathVariable Long companyId, @RequestBody CompanyRequest companyRequest) {
         return companyService.updateCompany(companyId, companyRequest);
     }
 
     @DeleteMapping("/{companyId}")
     public SimpleResponse deleteCompanyById(@PathVariable Long companyId) {
         return companyService.deleteCompanyById(companyId);
+    }
+    @GetMapping("/get/{companyId}")
+    public CompanyInfoResponse getByIdCompany(@PathVariable Long companyId) {
+        return companyService.getInfo(companyId);
     }
 
 }

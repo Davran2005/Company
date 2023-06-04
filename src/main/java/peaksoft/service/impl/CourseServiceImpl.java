@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.dto.request.CompanyRequest;
 import peaksoft.dto.request.CourseRequest;
 import peaksoft.dto.response.CourseResponse;
+import peaksoft.dto.response.SortResponse;
 import peaksoft.dto.response.simple.SimpleResponse;
 import peaksoft.entyti.Company;
 import peaksoft.entyti.Course;
@@ -23,7 +24,7 @@ public class CourseServiceImpl implements CourseService {
     private final CompanyRep companyRep;
 
     @Override
-    public SimpleResponse saveCourse(Long companyId, CourseRequest courseRequest) {
+    public CourseResponse saveCourse(Long companyId, CourseRequest courseRequest) {
         Company company = companyRep.findById(companyId).orElseThrow(() -> new NullPointerException("Company with id: " + companyId + "not found"));
         Course course = new Course();
         course.setCourseName(courseRequest.getCourseName());
@@ -32,11 +33,11 @@ public class CourseServiceImpl implements CourseService {
         company.getCourses().add(course);
         course.setCompany(company);
         courseRep.save(course);
-        return SimpleResponse
-                .builder()
-                .status("OK")
-                .message("Save Course")
-                .build();
+        return new CourseResponse(
+                course.getId(),
+                course.getCourseName(),
+                course.getDescription()
+                );
 
     }
 
@@ -53,21 +54,40 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public SimpleResponse updateCourse(Long courseId, CourseRequest courseRequest) {
+    public CourseResponse updateCourse(Long courseId, CourseRequest courseRequest) {
         Course course = courseRep.findById(courseId).orElseThrow(() -> new RuntimeException("Course with id: " + courseId + "not found!"));
         course.setCourseName(courseRequest.getCourseName());
         course.setDescription(courseRequest.getDescription());
         courseRep.save(course);
-        return SimpleResponse.builder()
-                .status("OK").message("Update Course").build();
+        return  new CourseResponse(
+                course.getId(),
+                course.getCourseName(),
+                course.getDescription()
+        );
     }
 
     @Override
     public SimpleResponse deleteCourseById(Long courseId) {
-
         Course course = courseRep.findById(courseId).orElseThrow(() -> new RuntimeException("Course with id: " + courseId + "not found!"));
         course.setCompany(null);
         courseRep.delete(course);
         return SimpleResponse.builder().status("OK").message("Успешно").build();
+    }
+
+    @Override
+    public Object getSort(String askOrDesc) {
+        Course course = new Course();
+        List<String> allSortAsk;
+        if (askOrDesc.equalsIgnoreCase("asc")){
+            allSortAsk = courseRep.getAllSortAsk(askOrDesc);
+        }else if(askOrDesc.equalsIgnoreCase("desc")) {
+            allSortAsk = courseRep.getAllSortDesc();
+        }else {
+            return SimpleResponse.builder()
+                    .status("BAD_REQUEST")
+                    .message("Parameter must accept ASC or DESC")
+                    .build();
+        }
+        return SortResponse.builder().id(course.getId()).list(allSortAsk).build();
     }
 }

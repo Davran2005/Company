@@ -15,9 +15,17 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyRep extends JpaRepository<Company, Long> {
-    @Query("select new peaksoft.dto.response.CourseResponse(c.id,c.name,c.country,c.address,c.phoneNumber) from Company c")
+    @Query("select new peaksoft.dto.response.CompanyResponse(c.id,c.name,c.country,c.address,c.phoneNumber) from Company c")
     List<CompanyResponse> getAllCompany();
 
     Optional<CompanyResponse> getCompanyById(Long id);
+    @Query("select count(s.id) from Company c join c.courses cc join cc.groups g join g.students s where c.id=:companyId")
+    int studentCount(@Param("companyId") Long companyId);
+    @Query("select a.courseName from Company c join c.courses a where a.id = :companyId")
+    List<String> getAllCourseName(Long companyId);
+    @Query("select g.groupName from Company c join c.courses a join a.groups g where g.id = :companyId")
+    List<String> getAllGroupName(Long companyId);
+    @Query("select i.firstName from Company c join c.instructors i where i.id = :companyId")
+    List<String> getAllInstructorName(Long companyId);
 
 }
